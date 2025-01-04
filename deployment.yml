@@ -17,7 +17,7 @@ spec:
        image: fyc-frontend
        env:
          - name: VITE_APP_NGINX_URL
-           value: http://172.20.0.2:30080
+           value: http://10.10.24.2:30080
        ports:
        - containerPort: 80
        resources:
