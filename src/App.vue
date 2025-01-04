@@ -1,30 +1,53 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <button @click="login">login</button>
+  <button @click="current_datetime">current_datetime</button>
 </template>
+<script setup>
+import axios from 'axios'
 
+let base_url = import.meta.env.VITE_APP_NGINX_URL
+
+let token = null
+axios.defaults.baseURL = base_url;
+function login() {
+  axios.post("/auth/login", {
+    username: 'testuser',
+    password: 'password123'
+  }).then((data) => {
+    token = data.data["token"]
+  })
+}
+function current_datetime() {
+  axios.get(base_url + '/api/current-datetime', {headers: {"Authorization": token}}).then((data) => {
+    console.log(data.data)
+  })
+}
+</script>
 <style scoped>
+header {
+  line-height: 1.5;
+}
+
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  display: block;
+  margin: 0 auto 2rem;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
+  }
+
+  .logo {
+    margin: 0 2rem 0 0;
+  }
+
+  header .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
+  }
 }
 </style>
